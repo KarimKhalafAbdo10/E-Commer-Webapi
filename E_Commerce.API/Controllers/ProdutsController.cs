@@ -1,11 +1,60 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_Commerce.Application.common;
+using E_Commerce.Application.Contracts;
+using E_Commerce.Application.DTOs.Product;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace E_Commerce.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProdutsController : ControllerBase
+   
+    public class ProdutsController : ApiBaseController
     {
+        private readonly IProductService _productService;
+
+        public ProdutsController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        //Get All Products
+        [HttpGet]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken ct)
+        {
+            var result =await _productService.GetAllProductsAsync(ct);
+            return ToActionResult(result);
+        }
+
+        //Get Product By Id
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProductDto>> GetProductById(int id, CancellationToken ct)
+        {
+            var result = await _productService.GetProductByIdAsync(id, ct);
+            return ToActionResult(result);
+        }
+        //Get All Brands
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetAllBrands(CancellationToken ct)
+        {
+            var result =await _productService.GetAllBrandsAsync(ct);
+            return ToActionResult(result);
+
+        }
+        //Get All Types
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<TypesDto>>> GetAllTypes(CancellationToken ct)
+        {
+            var result = await _productService.GetAllTypesAsync(ct);
+            return ToActionResult(result);
+
+        }
+
+
+
     }
 }
