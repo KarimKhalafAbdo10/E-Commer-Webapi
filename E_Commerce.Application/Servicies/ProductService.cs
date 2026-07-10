@@ -2,6 +2,7 @@
 using E_Commerce.Application.common;
 using E_Commerce.Application.Contracts;
 using E_Commerce.Application.DTOs.Product;
+using E_Commerce.Application.Specifications;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Domain.Entities.Products;
 using System;
@@ -24,16 +25,18 @@ namespace E_Commerce.Application.Servicies
         }
         public async Task<Result<IReadOnlyList<BrandDto>>> GetAllBrandsAsync(CancellationToken ct = default)
         {
-            var brands = await unitOfWork.GetRepository<Product,int>().GetAllAsync(ct);
+            var brands = await unitOfWork.GetRepository<ProductBrand,int>().GetAllAsync(ct);
             var mappedBrands = mapper.Map<IReadOnlyList<BrandDto>>(brands);
             return Result<IReadOnlyList<BrandDto>>.Ok(mappedBrands);
         }
 
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(ProductsQueryParams queryParams, CancellationToken ct = default)
         {
-            var products = await unitOfWork.GetRepository<Product,int>().GetAllAsync(ct);
-            return Result<IReadOnlyList<ProductDto>>.Ok(mapper.Map<IReadOnlyList<ProductDto>>(products));
+            var specification = new ProductWithTypeAndBrandSpecification(queryParams);
+               var products = await unitOfWork.GetRepository<Product,int>().GetAllAsync(specification,ct);
+               return Result<IReadOnlyList<ProductDto>>.Ok(mapper.Map<IReadOnlyList<ProductDto>>(products));
         }
+
 
         public async Task<Result<IReadOnlyList<TypesDto>>> GetAllTypesAsync(CancellationToken ct = default)
         {
@@ -44,7 +47,9 @@ namespace E_Commerce.Application.Servicies
 
         public async Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct = default)
         {
-            var product= await unitOfWork.GetRepository<Product,int>().GetByIdAsync(id, ct);
+
+            var spec=new ProductWithTypeAndBrandSpecification(id);
+            var product= await unitOfWork.GetRepository<Product,int>().GetByIdAsync(spec, ct);
             if (product is null) return Error.NotFound("Product.NotFound",$"Product With Id{id} NOT Found");
             return mapper.Map<ProductDto>(product);
 

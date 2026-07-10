@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Application.common
 {
-
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ErrorType
-    {   Failure=0,
-        validation=1,
-        NotFound=2,
-        Conflict=3,
-        Unauthorized=4,
-        Forbidden=5,
-        InvalidCredentials=6,
+    public enum ProductStringOptions
+    {       None=0,
+            NameASC =1,
+            NameDESC=2,
+            PriceASC=3,
+            PriceDESC=4,
 
     }
 }
