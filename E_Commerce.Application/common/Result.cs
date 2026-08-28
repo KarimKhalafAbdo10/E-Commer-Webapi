@@ -29,7 +29,7 @@ namespace E_Commerce.Application.common
     {
         private readonly TValue _value;
 
-        public TValue Value => IsSuccess ? _value : throw new InvalidOperationException("Cannot access the value of a failed result.");
+        public TValue data => IsSuccess ? _value : throw new InvalidOperationException("Cannot access the value of a failed result.");
 
         private Result(TValue value) : base(true, Array.Empty<Error>())
         {
@@ -46,7 +46,7 @@ namespace E_Commerce.Application.common
             _value = default!;
         }
 
-        public static Result<TValue> Ok(TValue value) => new(value);
+        public static Result<TValue> Ok(TValue value) => new Result<TValue> (value);
         public static new Result<TValue> Fail(Error error) => new(error);
         public static new Result<TValue> Fail(IReadOnlyList<Error> errors) => new(errors);
 
