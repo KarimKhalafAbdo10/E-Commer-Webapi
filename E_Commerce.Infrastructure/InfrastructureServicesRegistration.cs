@@ -23,8 +23,8 @@ namespace E_Commerce.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices( this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<StoreIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
+            services.AddDbContext<StoreDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<StoreIdentityDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("IdentityConnection")));
 
             services.AddKeyedScoped<IDataSeeder, CatalogDataSeeder>("Catalog");
             services.AddKeyedScoped<IDataSeeder, IdentitySeeder>("Identity");
