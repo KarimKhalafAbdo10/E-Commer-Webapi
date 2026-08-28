@@ -16,6 +16,12 @@
     <None Remove="Files\NewFolder\**" />
   </ItemGroup>
 
+	
+
+  <ItemGroup>
+    <Compile Include="DockerFile" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.29">
       <PrivateAssets>all</PrivateAssets>
