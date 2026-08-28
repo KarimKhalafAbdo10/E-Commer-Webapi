@@ -1,0 +1,27 @@
+﻿
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 8080
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy project files for dependency restoration
+COPY ["E_Commerce.API/E_Commerce.API.csproj", "E_Commerce.API/"]
+# If you have class libraries (Core, Infrastructure, Repository, etc.), copy them here:
+# COPY ["E_Commerce.Core/E_Commerce.Core.csproj", "E_Commerce.Core/"]
+# COPY ["E_Commerce.Repository/E_Commerce.Repository.csproj", "E_Commerce.Repository/"]
+
+RUN dotnet restore "E_Commerce.API/E_Commerce.API.csproj"
+COPY . .
+WORKDIR "/src/E_Commerce.API"
+RUN dotnet build "E_Commerce.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "E_Commerce.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "E_Commerce.API.dll"]
+    
