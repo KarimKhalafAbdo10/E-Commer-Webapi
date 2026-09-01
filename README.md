@@ -2,6 +2,7 @@
 A robust backend service for managing an e-commerce platform. This API provides endpoints for handling products, categories, users, authentication, and orders. Built with ASP.NET Core Web API and integrated with SQL Server for data persistence.
 
 🚀 Features
+
 👤 User Authentication & Authorization
 
 Register, login, and manage accounts
